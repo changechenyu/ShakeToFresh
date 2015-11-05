@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,10 +12,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
-    Button clear;
+    List<Map<String,Object>> mData=new ArrayList<Map<String,Object>>();
+    private String[] mListTitle={"姓名: ","性别: ","年龄: ","居住地: ","邮箱: "};
+    private String[] mListStr={"chenyu","男","25","北京","2657607916@qq.com"};
+    private ListView mlistView=null;
+    private int i=0;
+    private ListView  lv;
+    private SimpleAdapter adapter;
     //定义sensor管理器
     private SensorManager mSensorManager;
     //震动
@@ -23,18 +37,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mData=getmData();
+        lv= (ListView) findViewById(R.id.lv);
+        adapter=new SimpleAdapter(this,mData,R.layout.simple_list_item,new String[]{"title","text"},new int[]{R.id.text1,R.id.text2});
+        lv.setAdapter(adapter);
         //获取传感器管理服务
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         //震动
         vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
-        clear = (Button) findViewById(R.id.clear);
-        clear.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //点击button后，给button按钮设置了text
-                clear.setText("现在给button的text赋值喽~");
-            }
-        });
     }
 
     @Override
@@ -70,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
   */
             if((Math.abs(values[0])>14||Math.abs(values[1])>14||Math.abs(values[2])>14)) {
                 //摇动手机后，设置button上显示的字为空
-                clear.setText(null);
+                new GetDataTask().execute();
                 //摇动手机后，再伴随震动提示~~
 //                vibrator.vibrate(500);
             }
@@ -89,5 +99,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         super.onStop();
 
+    }
+    public List<Map<String,Object>> getmData(){
+        for(int i=0;i<mListTitle.length;i++){
+            Map<String,Object> map=new HashMap<String,Object>();
+            map.put("title",mListTitle[i]);
+            map.put("text",mListStr[i]);
+            mData.add(map);
+        }
+        return mData;
+    }
+    private class GetDataTask extends AsyncTask<Void, Void, Map<String,Object>>
+    {
+        @Override
+        protected Map<String, Object> doInBackground(Void... params) {
+            Map<String,Object> map=new HashMap<String,Object>();
+            map.put("title","title"+(i++)+":--->");
+            map.put("text", "text" + (i++));
+            return map;
+        }
+        @Override
+        protected void onPostExecute(Map<String, Object> stringObjectMap) {
+            //            super.onPostExecute(stringObjectMap);
+            mData.add(stringObjectMap);
+            adapter.notifyDataSetChanged();
+            // Call onRefreshComplete when the list has been refreshed. 如果没有下面的函数那么刷新将不会停
+        }
     }
 }
