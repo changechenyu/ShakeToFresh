@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ShakeToFresh.iml" filepath="$PROJECT_DIR$/ShakeToFresh.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/sliding/sliding.iml" filepath="$PROJECT_DIR$/lib/sliding/sliding.iml" />
     </modules>
   </component>
 </project>

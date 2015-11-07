@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:textColor="#ffaaff"
+        android:textColor="#29bffb"
         android:textSize="25sp"
         />
     <TextView
@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:textColor="#ffaaff"
+        android:textColor="#FF4040"
         android:textSize="25sp"
         />
 </LinearLayout>

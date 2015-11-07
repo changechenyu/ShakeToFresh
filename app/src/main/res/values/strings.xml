@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ShakeToFresh</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="hello">Satellite Menu Sample Activity</string>
+
+
 </resources>
