@@ -25,14 +25,12 @@ public class GridViewFragment extends Fragment implements SensorEventListener {
     private LinkedList<String> mListItems;
     private ArrayAdapter<String> mAdapter;
     private int mItemCount=9;
-
     //定义sensor管理器
     private SensorManager mSensorManager;
     //震动
     private Vibrator vibrator;
-
     @Override
-    public void onResume() {
+    public void onResume(){
         super.onResume();
         //加速度传感器
         mSensorManager.registerListener(this,

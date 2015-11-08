@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class WebViewFragment  extends Fragment implements SensorEventListener {
     private WebView webView;
     private ProgressBar bar;
-    private String url = "http://blog.csdn.net/u011068702";
+    public  static String url = "http://blog.csdn.net/u011068702";
     //定义sensor管理器
     private SensorManager mSensorManager;
     //震动
@@ -96,6 +97,14 @@ public class WebViewFragment  extends Fragment implements SensorEventListener {
 
         });
         webView.loadUrl(url);
+        //锁定客户端，不要点击跳到安卓内置浏览器里面去了
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                webView.loadUrl(url);
+                return false;
+            }
+        });
         //获取传感器管理服务
         mSensorManager = (SensorManager) getActivity().getSystemService(Service.SENSOR_SERVICE);
         //震动
@@ -120,4 +129,5 @@ public class WebViewFragment  extends Fragment implements SensorEventListener {
                 webView.reload();
         }
     }
+
 }

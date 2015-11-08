@@ -27,8 +27,8 @@ import java.util.Map;
  */
 public class ListViewFragment extends Fragment implements SensorEventListener {
     List<Map<String, Object>> mData = new ArrayList<Map<String, Object>>();
-    private String[] mListTitle = {"功能: ", "姓名: ", "我的QQ:", "QQ学习群:", "邮箱:"};
-    private String[] mListStr = {"手机摇一摇震动刷新", "陈喻", "2657607916", "319010802", "2657607916@qq.com"};
+    private String[] mListTitle = {"功能: ", "附带：","姓名: ", "我的QQ:", "QQ学习群:", "邮箱:"};
+    private String[] mListStr = {"手机摇一摇震动刷新","摇出我的二维码", "陈喻", "2657607916", "319010802", "2657607916@qq.com"};
     private ListView mlistView = null;
     private ListView lv;
     private SimpleAdapter adapter;
@@ -37,7 +37,6 @@ public class ListViewFragment extends Fragment implements SensorEventListener {
     private SensorManager mSensorManager;
     //震动
     private Vibrator vibrator;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
