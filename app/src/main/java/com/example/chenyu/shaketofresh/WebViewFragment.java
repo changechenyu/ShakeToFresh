@@ -108,15 +108,8 @@ public class WebViewFragment  extends Fragment implements SensorEventListener {
         @Override
         protected Void doInBackground(Void... params) {
             Map<String,Object> map=new HashMap<String,Object>();
-            //如果这个地方不使用线程休息的话，刷新就不会显示在那个PullToRefreshListView的UpdatedLabel上面
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             return null;
         }
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
