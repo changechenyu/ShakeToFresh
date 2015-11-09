@@ -1,5 +1,5 @@
 # ShakeToFresh
-##手机摇一摇震动刷新
+##手机摇一摇震动刷新（支持ListView、GridView、WebView）
 有时玩QQ，打开网页很卡，人很烦躁，QQ接受信息多的时候下拉有点拉不动，拉不动怎么破，打开网页卡怎么破，就用力摇一摇吧，既能刷新，也能去除心里面的不爽， WebView的刷新还用了水平彩色的进度条，细心的你一定能发现，下面是没有摇一摇手机之前的相关界面如下<br>
 ![](https://github.com/changechenyu/ShakeToFresh/blob/master/app/src/main/res/drawable/shake.gif) 
 <br>
