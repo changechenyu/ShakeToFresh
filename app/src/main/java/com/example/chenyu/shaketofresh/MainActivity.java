@@ -1,129 +1,133 @@
 package com.example.chenyu.shaketofresh;
-import android.app.Service;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
+
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
-    List<Map<String,Object>> mData=new ArrayList<Map<String,Object>>();
-    private String[] mListTitle={"姓名: ","性别: ","年龄: ","居住地: ","邮箱: "};
-    private String[] mListStr={"chenyu","男","25","北京","2657607916@qq.com"};
-    private ListView mlistView=null;
-    private int i=0;
-    private ListView  lv;
-    private SimpleAdapter adapter;
-    //定义sensor管理器
-    private SensorManager mSensorManager;
-    //震动
-    private Vibrator vibrator;
+public class MainActivity extends AppCompatActivity {
+    private TextView tvListView;  //侧滑菜单listView
+    private TextView tvGridView;  //侧滑菜单GridView
+    private TextView tvWebview;   //侧滑菜单WebView
+    private TextView tvCode;      //侧滑菜单我的二维码
+    private ArrayList<TextView> textViews;
+    private static SlidingMenu menu;
+    private ListView slidingLv;   //侧滑菜单
+    private SensorManager mSensorManager;//定义sensor管理器
+    private Vibrator vibrator;    //震动
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mData=getmData();
-        lv= (ListView) findViewById(R.id.lv);
-        adapter=new SimpleAdapter(this,mData,R.layout.simple_list_item,new String[]{"title","text"},new int[]{R.id.text1,R.id.text2});
-        lv.setAdapter(adapter);
-        //获取传感器管理服务
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        //震动
-        vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
+        //初始化界面
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ListViewFragment listViewFragment = new ListViewFragment();
+        ft.replace(R.id.content, listViewFragment);
+        ft.commit();
+        //初始左侧菜单
+        initSlidingMenu();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //加速度传感器
-        mSensorManager.registerListener(this,
-                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                //还有SENSOR_DELAY_UI、SENSOR_DELAY_FASTEST、SENSOR_DELAY_GAME等，
-                //根据不同应用，需要的反应速率不同，具体根据实际情况设定
-                SensorManager.SENSOR_DELAY_NORMAL);
+    private void initSlidingMenu() {
+        //侧滑菜单
+        menu = new SlidingMenu(MainActivity.this); // 实例化滑动菜单对象
+        menu.setMode(SlidingMenu.LEFT);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        //  menu.setShadowWidthRes(R.dimen.shadow_width); // 设置菜单边缘的渐变颜色宽度 （阴影效果宽度）
+        //   menu.setShadowDrawable(R.drawable.slidingmenu_shadow); // 设置滑动阴影的图像资源
+        //  menu.setBehindOffsetRes(R.dimen.slidingmenu_offset); // 设置滑动菜单视图的宽度
+        menu.setFadeDegree(0.35f);// 边框的角度，这里指边界地方（设置渐入渐出效果的值 ）
+        menu.attachToActivity(MainActivity.this, SlidingMenu.SLIDING_CONTENT); // 把侧滑栏关联到当前的Activity
+        menu.setMenu(R.layout.slidingmenu);// 设置当前的视图
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        long screenWidth = metric.widthPixels;// 获取屏幕的宽度
+        menu.setBehindWidth((int) (screenWidth * 0.4));// 设置左页的宽度
+        View view = menu.getMenu();
+        findMenuViews(view);//
+//        menu.showMenu();  如果想一进入界面，想把左侧菜单显示出来，用这个函数
     }
-    @Override
-    protected void onPause() {
-        super.onPause();
+
+    /**
+     * 把侧滑菜单的控件初始化
+     * @param view
+     */
+    private void findMenuViews(View view) {
+        tvListView = (TextView) view.findViewById(R.id.menu_listview);
+        tvGridView = (TextView) view.findViewById(R.id.menu_gridview);
+        tvWebview = (TextView) view.findViewById(R.id.menu_webview);
+        tvCode = (TextView) view.findViewById(R.id.menu_code);
+
+        tvListView.setOnClickListener(new MyOnClickListener());
+        tvGridView.setOnClickListener(new MyOnClickListener());
+        tvWebview.setOnClickListener(new MyOnClickListener());
+        tvCode.setOnClickListener(new MyOnClickListener());
+
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        // TODO Auto-generated method stub
-        int sensorType = event.sensor.getType();
-        //values[0]:X轴，values[1]：Y轴，values[2]：Z轴
-        float[] values = event.values;
-        if(sensorType == Sensor.TYPE_ACCELEROMETER){
-  /*因为一般正常情况下，任意轴数值最大就在9.8~10之间，只有在你突然摇动手机
-
-  *的时候，瞬时加速度才会突然增大或减少。
-
-  *所以，经过实际测试，只需监听任一轴的加速度大于14的时候，改变你需要的设置
-
-  *就OK了~~~
-
-  */
-            if((Math.abs(values[0])>14||Math.abs(values[1])>14||Math.abs(values[2])>14)) {
-                //摇动手机后，设置button上显示的字为空
-                new GetDataTask().execute();
-                //摇动手机后，再伴随震动提示~~
-//                vibrator.vibrate(500);
+    /**
+     * 改变每次点击左侧菜单的颜色
+     * @param textView
+     */
+    public void changeTextColor(TextView textView) {
+        textViews = new ArrayList<TextView>();
+        textViews.add(tvGridView);
+        textViews.add(tvWebview);
+        textViews.add(tvListView);
+        textViews.add(tvCode);
+        for (int i = 0; i < textViews.size(); i++) {
+            if (textViews.get(i).equals(textView)) {
+                textView.setTextColor(Color.GREEN);
+            } else {
+                textViews.get(i).setTextColor(Color.WHITE);
             }
+        }
+    }
+
+    class MyOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            switch (v.getId()) {
+                case R.id.menu_listview:
+                    changeTextColor(tvListView);
+                    ListViewFragment listViewFragment = new ListViewFragment();
+                    ft.replace(R.id.content, listViewFragment);
+                    break;
+                case R.id.menu_gridview:
+                    changeTextColor(tvGridView);
+                    GridViewFragment gridViewFragment = new GridViewFragment();
+                    ft.replace(R.id.content, gridViewFragment);
+                    break;
+                case R.id.menu_webview:
+                    changeTextColor(tvWebview);
+                    WebViewFragment webViewFragment = new WebViewFragment();
+                    ft.replace(R.id.content, webViewFragment);
+                    break;
+                case R.id.menu_code:
+                    changeTextColor(tvCode);
+                    CodeFragment codeFragment = new CodeFragment();
+                    ft.replace(R.id.content, codeFragment);
+                    break;
+                default:
+                    break;
             }
-        }
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        //TODO Auto-generated method stub
-
-        //当传感器精度改变时回调该方法，Do nothing.
-    }
-    @Override
-    protected void onStop(){
-
-        mSensorManager.unregisterListener(this);
-
-        super.onStop();
-
-    }
-    public List<Map<String,Object>> getmData(){
-        for(int i=0;i<mListTitle.length;i++){
-            Map<String,Object> map=new HashMap<String,Object>();
-            map.put("title",mListTitle[i]);
-            map.put("text",mListStr[i]);
-            mData.add(map);
-        }
-        return mData;
-    }
-    private class GetDataTask extends AsyncTask<Void, Void, Map<String,Object>>
-    {
-        @Override
-        protected Map<String, Object> doInBackground(Void... params) {
-            Map<String,Object> map=new HashMap<String,Object>();
-            map.put("title","title"+(i++)+":--->");
-            map.put("text", "text" + (i++));
-            return map;
-        }
-        @Override
-        protected void onPostExecute(Map<String, Object> stringObjectMap) {
-            //            super.onPostExecute(stringObjectMap);
-            mData.add(stringObjectMap);
-            adapter.notifyDataSetChanged();
-            // Call onRefreshComplete when the list has been refreshed. 如果没有下面的函数那么刷新将不会停
+            ft.commit();
         }
     }
 }
