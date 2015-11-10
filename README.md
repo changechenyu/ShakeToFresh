@@ -6,4 +6,4 @@
 我的模拟器没有重力感应，所以不能直接录屏，然后用真机测试后，把每个页面摇一摇震动刷新后截图下来再制成动画效果，做得不好不要喷<br>
 ![](https://github.com/changechenyu/ShakeToFresh/blob/master/app/src/main/res/drawable/result1.gif)  
 ![](https://github.com/changechenyu/ShakeToFresh/blob/master/app/src/main/res/drawable/result2.gif)  
-如果你觉得很好玩或者有创意就给我star吧。
+如果你觉得很好玩或者有创意就给star我呗。
