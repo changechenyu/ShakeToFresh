@@ -25,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<TextView> textViews;
     private static SlidingMenu menu;
     private ListView slidingLv;   //侧滑菜单
-    private SensorManager mSensorManager;//定义sensor管理器
-    private Vibrator vibrator;    //震动
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         //侧滑菜单
         menu = new SlidingMenu(MainActivity.this); // 实例化滑动菜单对象
         menu.setMode(SlidingMenu.LEFT);
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        menu.setTouchModeAbove(SlidingMenu.LEFT);//SlidingMenu.TouchMOde_ful^^^^^^^
         //  menu.setShadowWidthRes(R.dimen.shadow_width); // 设置菜单边缘的渐变颜色宽度 （阴影效果宽度）
         //   menu.setShadowDrawable(R.drawable.slidingmenu_shadow); // 设置滑动阴影的图像资源
         //  menu.setBehindOffsetRes(R.dimen.slidingmenu_offset); // 设置滑动菜单视图的宽度

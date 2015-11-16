@@ -16,7 +16,7 @@
            android:layout_height="40dp"
            android:textColor="#ffffff"
            android:textSize="18sp"
-           android:text="ListView刷新"/>
+           android:text="小恐龙简介"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:paddingTop="5dp"
-            android:text="GridView刷新"
+            android:text="我的礼物"
             android:textColor="#ffffff"
             android:textSize="18sp"/>
     <View
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:paddingTop="5dp"
-            android:text="WebView刷新"
+            android:text="我的页面"
             android:textColor="#ffffff"
             android:textSize="18sp"/>
     <View

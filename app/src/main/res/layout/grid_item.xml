@@ -1,9 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/id_grid_item_text"
-    android:layout_width="100dp"
-    android:gravity="center"
-    android:textColor="#FF4040"
-    android:textSize="35sp"
-    android:background="#29bffb"
-    android:layout_height="100dp" />   
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/imageview"
+        android:layout_width="100dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:background="@drawable/birthday1"
+        android:layout_height="100dp" />
+    <TextView
+        android:layout_below="@+id/imageview"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/love"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我爱你"
+        />
+</RelativeLayout>
+

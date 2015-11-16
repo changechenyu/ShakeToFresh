@@ -55,7 +55,7 @@ public class CodeFragment extends Fragment implements SensorEventListener {
         //取消注册
         mSensorManager.unregisterListener(this);
     }
-
+    //可以得到传感器实时测量出来的变化值
     @Override
     public void onSensorChanged(SensorEvent event) {
         int sensorType = event.sensor.getType();

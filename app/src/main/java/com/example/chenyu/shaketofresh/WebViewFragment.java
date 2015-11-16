@@ -48,7 +48,7 @@ public class WebViewFragment extends Fragment implements SensorEventListener {
         //取消注册
         mSensorManager.unregisterListener(this);
     }
-
+    //可以得到传感器实时测量出来的变化值
     @Override
     public void onSensorChanged(SensorEvent event) {
         // TODO Auto-generated method stub
@@ -109,15 +109,12 @@ public class WebViewFragment extends Fragment implements SensorEventListener {
         vibrator = (Vibrator) getActivity().getSystemService(Service.VIBRATOR_SERVICE);
         return view;
     }
-
     private class GetDataTask extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected Void doInBackground(Void... params) {
             Map<String, Object> map = new HashMap<String, Object>();
             return null;
         }
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);

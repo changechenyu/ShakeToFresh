@@ -2,6 +2,7 @@ package com.example.chenyu.shaketofresh;
 
 import android.app.Fragment;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,21 +13,33 @@ import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * Created by Think on 2015/11/7.
  */
 public class GridViewFragment extends Fragment implements SensorEventListener {
     private GridView gridView;
-    private LinkedList<String> mListItems;
+//    private LinkedList<String> mListItems;
+    private ArrayList<HashMap<String,Object>> datas=new ArrayList<HashMap<String,Object>>();
+    private TextView tv;
     private ArrayAdapter<String> mAdapter;
+    private SimpleAdapter adapter;
     private int mItemCount = 9;
     private SensorManager mSensorManager;//定义sensor管理器
     private Vibrator vibrator;//震动
+    private int[] images={R.drawable.birthday1,R.drawable.birthday2,R.drawable.birthday8,R.drawable.birthday4,R.drawable.birthday5,R.drawable.birthday6,R.drawable.birthday7,R.drawable.birthday9,R.drawable.birthday10};
 
     @Override
     public void onResume() {
@@ -45,7 +58,7 @@ public class GridViewFragment extends Fragment implements SensorEventListener {
         //取消注册
         mSensorManager.unregisterListener(this);
     }
-
+    //重力传感器
     @Override
     public void onSensorChanged(SensorEvent event) {
         // TODO Auto-generated method stub
@@ -74,9 +87,17 @@ public class GridViewFragment extends Fragment implements SensorEventListener {
         View view = inflater.inflate(R.layout.gridview_fragment, container, false);
         initDatas();
         gridView = (GridView) view.findViewById(R.id.gridview_fragment);
-        mAdapter = new ArrayAdapter<String>(getActivity(), R.layout.grid_item,
-                R.id.id_grid_item_text, mListItems);
-        gridView.setAdapter(mAdapter);
+//        mAdapter = new ArrayAdapter<String>(getActivity(), R.layout.grid_item,
+//                R.id.id_grid_item_text, mListItems);
+        adapter=new SimpleAdapter(getActivity(),datas,R.layout.grid_item,new String[]{"images","values"},new int[]{R.id.imageview,R.id.love});
+          gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(),"老婆我爱你",Toast.LENGTH_SHORT).show();
+            }
+        });
+//        gridView.setAdapter(mAdapter);
         //获取传感器管理服务
         mSensorManager = (SensorManager) getActivity().getSystemService(Service.SENSOR_SERVICE);
         //震动
@@ -85,24 +106,54 @@ public class GridViewFragment extends Fragment implements SensorEventListener {
     }
 
     private void initDatas() {
-        mListItems = new LinkedList<String>();
-        for (int i = 0; i < mItemCount; i++) {
-            mListItems.add(i + "");
-        }
+//        mListItems = new LinkedList<String>();
+//
+//        for (int i = 0; i < mItemCount; i++) {
+//            mListItems.add(i + "");
+//        }
+//        for(int i=0;i<3;i++){
+            HashMap<String,Object> map=new HashMap<String,Object>();
+            map.put("images",R.drawable.birthday1);
+            map.put("values","生日快乐");
+            datas.add(map);
+            map.put("images",R.drawable.birthday7);
+            map.put("values","生日快乐");
+            datas.add(map);
+        map.put("images",R.drawable.birthday9);
+        map.put("values","生日快乐");
+        datas.add(map);
+//        }
     }
-
-    private class GetDataTask extends AsyncTask<Void, Void, Void> {
+    private class GetDataTask extends AsyncTask<Void, Void, HashMap<String,Object>> {
         @Override
-        protected Void doInBackground(Void... params) {
+        protected HashMap<String,Object> doInBackground(Void... params) {
             //摇动手机后，再伴随震动提示~~
+            HashMap<String,Object> map=new HashMap<String,Object>();
+            Random random=new java.util.Random();
+            int result=random.nextInt(9);
+            map.put("images",images[result]);
+//            map.put("images",R.drawable.birthday1);
+            map.put("values", "生日快乐");
+//            mListItems.add("" + mItemCount++);
             vibrator.vibrate(500);
-            return null;
+            return map;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            mListItems.add("" + mItemCount++);
-            mAdapter.notifyDataSetChanged();
+        protected void onPostExecute(HashMap<String, Object> stringObjectHashMap) {
+            datas.add(stringObjectHashMap);
+            adapter.notifyDataSetChanged();
+            super.onPostExecute(stringObjectHashMap);
         }
+        //        @Override
+//        protected void onPostExecute(Void result) {
+//            HashMap<String,Object> map=new HashMap<String,Object>();
+//            map.put("images",R.drawable.birthday1);
+//            map.put("values","生日快乐");
+////            mListItems.add("" + mItemCount++);
+//            datas.add(map);
+//            mAdapter.notifyDataSetChanged();
+//        }
     }
+
 }
